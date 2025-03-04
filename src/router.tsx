@@ -21,6 +21,8 @@ const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const DocumentsPage = lazy(() => import('./pages/DocumentsPage'));
 const DocumentViewPage = lazy(() => import('./pages/DocumentViewPage'));
+const BlogPage = lazy(() => import('./pages/BlogPage'));
+const BlogPostDetailPage = lazy(() => import('./pages/blog/BlogPostDetailPage'));
 
 export const router = createBrowserRouter([
   // Redirect legacy /login and /register routes to new auth routes
@@ -59,6 +61,29 @@ export const router = createBrowserRouter([
     path: '/',
     errorElement: <ErrorBoundary />,
     children: [
+      {
+        path: 'blog',
+        children: [
+          {
+            path: '',
+            element: (
+              <SuspenseWrapper>
+                <BlogPage />
+              </SuspenseWrapper>
+            ),
+            errorElement: <ErrorBoundary />
+          },
+          {
+            path: ':id',
+            element: (
+              <SuspenseWrapper>
+                <BlogPostDetailPage />
+              </SuspenseWrapper>
+            ),
+            errorElement: <ErrorBoundary />
+          }
+        ]
+      },
       {
         path: 'profile',
         element: <Profile />,
