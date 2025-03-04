@@ -6,7 +6,6 @@ import { DashboardMainLayout } from "./components/DashboardMainLayout";
 import AuthGuard from "./components/AuthGuard";
 
 const App = lazy(() => import("./pages/App.tsx"));
-const Analytics = lazy(() => import("./pages/AnalyticsPage.tsx"));
 const BlogPage = lazy(() => import("./pages/BlogPage.tsx"));
 const BlogPostsPage = lazy(() => import("./pages/BlogPostsPage.tsx"));
 const BlogPostEditorPage = lazy(() => import("./pages/blog/BlogPostEditorPage.tsx"));
@@ -70,7 +69,6 @@ export const userRoutes: RouteObject[] = [
     ),
     children: [
       { index: true, element: <SuspenseWrapper><Dashboard /></SuspenseWrapper> },
-      { path: "analytics", element: <SuspenseWrapper><Analytics /></SuspenseWrapper> },
       { path: "blog", element: <SuspenseWrapper><BlogPage /></SuspenseWrapper> },
       { path: "blog-posts", element: <SuspenseWrapper><BlogPostsPage /></SuspenseWrapper> },
       { path: "blog-posts/new", element: <SuspenseWrapper><BlogPostEditorPage /></SuspenseWrapper> },
