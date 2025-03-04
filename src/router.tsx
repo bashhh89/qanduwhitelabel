@@ -1,6 +1,5 @@
 import { lazy, type ReactNode, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { userRoutes } from "./user-routes";
 import { ErrorBoundary } from './components/ErrorBoundary';
 import ContentPage from './components/ContentPage';
 
@@ -12,20 +11,15 @@ export const SuspenseWrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Lazy load components
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const SomethingWentWrongPage = lazy(() => import("./pages/SomethingWentWrongPage"));
-const Profile = lazy(() => import('./pages/Profile'));
-const AdminLogin = lazy(() => import('./pages/AdminLogin'));
-const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
-const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
-const DocumentsPage = lazy(() => import('./pages/DocumentsPage'));
-const DocumentViewPage = lazy(() => import('./pages/DocumentViewPage'));
-const BlogPage = lazy(() => import('./pages/BlogPage'));
-const BlogPostDetailPage = lazy(() => import('./pages/blog/BlogPostDetailPage'));
 
-export const router = createBrowserRouter([
-  // Redirect legacy /login and /register routes to new auth routes
+// Import userRoutes after component declarations
+import { userRoutes } from "./user-routes";
+
+// Define static routes first
+const staticRoutes = [
   {
     path: '/login',
     element: <Navigate to="/sign-in" replace />,
@@ -34,7 +28,6 @@ export const router = createBrowserRouter([
     path: '/register',
     element: <Navigate to="/sign-up" replace />,
   },
-  ...userRoutes,
   {
     path: 'pages/:category/:page',
     element: (
@@ -56,79 +49,11 @@ export const router = createBrowserRouter([
         <SomethingWentWrongPage />
       </SuspenseWrapper>
     ),
-  },
-  {
-    path: '/',
-    errorElement: <ErrorBoundary />,
-    children: [
-      {
-        path: 'blog',
-        children: [
-          {
-            path: '',
-            element: (
-              <SuspenseWrapper>
-                <BlogPage />
-              </SuspenseWrapper>
-            ),
-            errorElement: <ErrorBoundary />
-          },
-          {
-            path: ':id',
-            element: (
-              <SuspenseWrapper>
-                <BlogPostDetailPage />
-              </SuspenseWrapper>
-            ),
-            errorElement: <ErrorBoundary />
-          }
-        ]
-      },
-      {
-        path: 'profile',
-        element: <Profile />,
-        errorElement: <ErrorBoundary />
-      },
-      {
-        path: 'admin',
-        children: [
-          {
-            path: 'login',
-            element: <AdminLogin />,
-            errorElement: <ErrorBoundary />
-          },
-          {
-            path: 'dashboard',
-            element: <AdminDashboard />,
-            errorElement: <ErrorBoundary />
-          }
-        ]
-      },
-      {
-        path: 'dashboard',
-        children: [
-          {
-            path: 'analytics',
-            element: <AnalyticsPage />,
-            errorElement: <ErrorBoundary />
-          },
-          {
-            path: 'settings',
-            element: <SettingsPage />,
-            errorElement: <ErrorBoundary />
-          },
-          {
-            path: 'documents',
-            element: <DocumentsPage />,
-            errorElement: <ErrorBoundary />
-          },
-          {
-            path: 'documents/:id',
-            element: <DocumentViewPage />,
-            errorElement: <ErrorBoundary />
-          }
-        ]
-      }
-    ]
   }
+];
+
+// Create and export the router with proper order
+export const router = createBrowserRouter([
+  ...staticRoutes,
+  ...userRoutes
 ]);
